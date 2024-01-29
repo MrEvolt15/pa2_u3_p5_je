@@ -1,33 +1,23 @@
 package com.uce.edu;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-
-import com.uce.edu.ventas.repository.modelo.DetalleFactura;
-import com.uce.edu.ventas.repository.modelo.Factura;
-import com.uce.edu.ventas.service.IFacturaService;
+import com.uce.edu.ventas.repository.modelo.Habitacion;
+import com.uce.edu.ventas.repository.modelo.Hotel;
+import com.uce.edu.ventas.service.IHotelService;
 
 @SpringBootApplication
-@ComponentScan("com.uce.edu")
+
 public class Pa2U3P5JeApplication implements CommandLineRunner{
 
-	//Join Types en JPA
-    // 1) Join
-    //1.1) Inner Join
-    //1.2) Outer Join
-    //  1.2.1)Right
-    //  1.2.2)Left
-    //  1.2.3)Full
-    // 2) Join Where
-    // 3) Fetch Join
-
 	@Autowired
-	private IFacturaService facturaService;
+	private IHotelService hotelService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Pa2U3P5JeApplication.class, args);
@@ -35,30 +25,75 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
+		Hotel h1 = new Hotel();
+		h1.setNombre("Decameron");
+		h1.setDescripcion("5 estrellas");
+		Hotel h2 = new Hotel();
+		h2.setNombre("Marriot");
+		h2.setDescripcion("4 estrellas");
+		Hotel h3 = new Hotel();
+		h3.setNombre("Bio Vital");
+		h3.setDescripcion("3 estrellas");
+
+		Habitacion hab1 = new Habitacion();
+		hab1.setNumero("H1");
+		hab1.setTipo("VIP");
+		hab1.setPrecio(BigDecimal.valueOf(100));
+		hab1.setHotel(h1);
+		Habitacion hab2 = new Habitacion();
+		hab2.setNumero("H2");
+		hab2.setTipo("NORMAL");
+		hab2.setPrecio(BigDecimal.valueOf(50));
+		hab2.setHotel(h2);
+		Habitacion hab3 = new Habitacion();
+		hab3.setNumero("H3");
+		hab3.setTipo("NORMAL");
+		hab3.setPrecio(BigDecimal.valueOf(60));
+		hab3.setHotel(h2);
+		Habitacion hab4 = new Habitacion();
+		hab4.setNumero("H4");
+		hab4.setTipo("VIP");
+		hab4.setPrecio(BigDecimal.valueOf(150));
+		hab4.setHotel(h1);
+		List<Habitacion> habitaciones1 = new ArrayList<>();
+		habitaciones1.add(hab1);
+		habitaciones1.add(hab4);
+		List<Habitacion> habitaciones2 = new ArrayList<>();
+		habitaciones2.add(hab2);
+		habitaciones2.add(hab3);
+
+		h1.setHabitaciones(habitaciones1);
+		h2.setHabitaciones(habitaciones2);
+		/*
+		this.hotelService.guardar(h1);
+		this.hotelService.guardar(h2);
+		this.hotelService.guardar(h3);
+		 */
 		System.err.println("Inner Join");
-		List<Factura> facturas = this.facturaService.buscarFacturasInnerJoin();
-		for (Factura factura : facturas) {
-			System.out.println(factura);
+		List<Hotel> hoteles = this.hotelService.buscarHotelInnerJoin();
+		for (Hotel hotel : hoteles) {
+			System.out.println(hotel);
 		}
 
 		System.err.println("Right Join");
-		List<Factura> facturas2 = this.facturaService.buscarFacturasRightJoin();
-		for (Factura factura : facturas2) {
-			System.out.println(factura);
+		List<Hotel> hoteles2 = this.hotelService.buscarHotelRightJoin();
+		for (Hotel hotel : hoteles2) {
+			System.out.println(hotel);
 		}
 		System.err.println("Left Join");
-		List<Factura> facturas3 = this.facturaService.buscarFacturasLeftJoin();
-		for (Factura factura : facturas3) {
-			System.out.println(factura);
+		List<Hotel> hoteles3 = this.hotelService.buscarHotelLeftJoin();
+		for (Hotel hotel : hoteles3) {
+			System.out.println(hotel);
 		}
 		System.err.println("Full Join");
-		List<Factura> facturas4 = this.facturaService.buscarFacturasFullJoin();
-		for (Factura factura : facturas4) {
-			System.out.println(factura);
-			for (DetalleFactura detalleFactura : factura.getDetalleFacturas()) {
-				System.out.println(detalleFactura);
+		List<Hotel> hoteles4 = this.hotelService.buscarHotelFullJoin();
+		for (Hotel hotel : hoteles4) {
+			System.out.println(hotel);
+			for (Habitacion habitacion : hotel.getHabitaciones()) {
+				System.out.println(habitacion);
 			}
 		}
+		
 	}
 
 }
