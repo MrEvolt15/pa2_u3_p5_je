@@ -42,9 +42,9 @@ public class FacturaRepositoryImpl implements IFacturaRepository{
 
         TypedQuery<Factura> query = this.entityManager.createQuery("select f from Factura f join f.detalleFacturas d", Factura.class);
         List<Factura> facturas = query.getResultList();
-        for (Factura factura : facturas) {
-            factura.getDetalleFacturas().size();
-        }
+    //    for (Factura factura : facturas) {
+    //        factura.getDetalleFacturas().size();
+    //    }
         return facturas;
     }
     @Override
@@ -73,6 +73,29 @@ public class FacturaRepositoryImpl implements IFacturaRepository{
         for (Factura factura : facturas) {
             factura.getDetalleFacturas().size();
         }
+        return facturas;
+    }
+    @Override
+    public List<Factura> seleccionarFacturasJoinWhere() {
+        //SQL: SELECT f.* FROM factura f, detalle_factura d WHERE f.fact_id = d.defa_if_factura
+        //JPQL: SELECT f FROM Factura f, DetalleFactura d WHERE f.fact_id = d.factura.id
+        //                                                WHERE f = d.factura
+        TypedQuery<Factura> query = this.entityManager.createQuery("SELECT f FROM Factura f, DetalleFactura d WHERE f = d.factura", Factura.class);
+        List<Factura> facturas = query.getResultList();
+        for (Factura factura : facturas) {
+            factura.getDetalleFacturas().size();
+        }
+        return facturas;
+    }
+    //Fetch join es mucho mas eficiente en terminos de numeros de consultas
+    //Native query es mucho mas rapido
+    @Override
+    public List<Factura> seleccionarFacturasFetchJoin() {
+        //Inner Join: select f from Factura f join f.detalleFactura d
+        //select f from Factura f join fetch f.detalleFactura d
+        TypedQuery<Factura> query = this.entityManager.createQuery("select f from Factura f join fetch f.detalleFacturas d", Factura.class);
+        List<Factura> facturas = query.getResultList();
+        
         return facturas;
     }
 
