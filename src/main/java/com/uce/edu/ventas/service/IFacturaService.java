@@ -1,8 +1,10 @@
 package com.uce.edu.ventas.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.uce.edu.ventas.repository.modelo.Factura;
+import com.uce.edu.ventas.repository.modelo.dto.FacturaDTO;
 
 public interface IFacturaService {
     public void guardar(Factura factura);
@@ -14,4 +16,9 @@ public interface IFacturaService {
 
     public List<Factura> buscarFacturasJoinWhere();
     public List<Factura> buscarFacturasFetchJoin();
+    public int actualizarFechas(LocalDate fechaNueva, LocalDate fechaActual);
+    public void borrar(Integer id);
+    public int borrarPorNumero(String numero);
+
+    public List<FacturaDTO> buscarFacturasDTO();
 }

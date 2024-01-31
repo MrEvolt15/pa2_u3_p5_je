@@ -31,6 +31,10 @@ public class Factura {
     @OneToMany(mappedBy = "factura",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<DetalleFactura> detalleFacturas;
 
+    //Se puede encontrar una entidad con 100 atributos 
+    //select 2 columnas 
+    //select 100 columnas
+
     //SETS Y GETS
     public Integer getId() {
         return id;

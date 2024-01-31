@@ -1,13 +1,16 @@
 package com.uce.edu.ventas.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import com.uce.edu.ventas.repository.modelo.Factura;
+import com.uce.edu.ventas.repository.modelo.dto.FacturaDTO;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
@@ -97,6 +100,45 @@ public class FacturaRepositoryImpl implements IFacturaRepository{
         List<Factura> facturas = query.getResultList();
         
         return facturas;
+    }
+    @Override
+    public void actualizar(Factura factura) {
+        this.entityManager.merge(factura);
+    }
+    @Override
+    public int actualizarFechas(LocalDate fechaNueva, LocalDate fechaActual) {
+        //select * from Factura f where f.fecha>=fechaActual
+        //lista
+        //recorrer la lista
+        //por cada factura seteo la nueva fecha
+        //actualizar cada factura
+        //SQL: Update factura set fact_fecha =:fechaNueva where fact_fecha >=fechaActual
+        //JPQL: Update Factura f set f.fecha = :fechaNueva where f.fecha >= :fechaActual
+        Query query = this.entityManager.createQuery("Update Factura f set f.fecha = :fechaNueva where f.fecha >= :fechaActual");
+        query.setParameter("fechaNueva", fechaNueva);
+        query.setParameter("fechaActual", fechaActual);
+        return query.executeUpdate();
+        //devuelve un entero que son la cantidad de registros afectados-actualizados
+    }
+    @Override
+    public void eliminar(Integer id) {
+        //aqui si tengo el objeto
+        //contiene los datos de la relacion (detalleFactura)
+        //aqui si se elimina en cascada
+        this.entityManager.remove(this.entityManager.find(Factura.class, id));
+    }
+    @Override
+    public int eliminarPorNumero(String numero) {
+        //SQL: delete from factura where fact_numero = :numero
+        //JPQL: delete from Factura f where f.numero = :numero
+        Query query = this.entityManager.createQuery("delete from Factura f where f.numero = :numero");
+        query.setParameter("numero", numero);
+        return query.executeUpdate();
+    }
+    @Override
+    public List<FacturaDTO> seleccionarFacturasDTO() {
+        TypedQuery<FacturaDTO> query = this.entityManager.createQuery("select new com.uce.edu.ventas.repository.modelo.dto.FacturaDTO(f.numero, f.fecha) from Factura f ",FacturaDTO.class);
+        return query.getResultList();
     }
 
 }
