@@ -1,6 +1,6 @@
 package com.uce.edu;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +8,21 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.ventas.repository.modelo.DetalleFactura;
-import com.uce.edu.ventas.repository.modelo.Factura;
-import com.uce.edu.ventas.repository.modelo.dto.FacturaDTO;
-import com.uce.edu.ventas.service.IFacturaService;
+import com.uce.edu.ventas.repository.modelo.Biblioteca;
+import com.uce.edu.ventas.repository.modelo.HistoriaClinica;
+import com.uce.edu.ventas.repository.modelo.Libro;
+import com.uce.edu.ventas.repository.modelo.Paciente;
+import com.uce.edu.ventas.service.IBibliotecaService;
+import com.uce.edu.ventas.service.IPacienteService;
 
 @SpringBootApplication
 
 public class Pa2U3P5JeApplication implements CommandLineRunner{
 
 	@Autowired
-	private IFacturaService facturaService;
+	private IPacienteService iPacienteService;
+	@Autowired
+	private IBibliotecaService bibliotecaService;
 	
 
 	public static void main(String[] args) {
@@ -27,24 +31,58 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		System.err.println("Update");
-		int cantidad = this.facturaService.actualizarFechas(LocalDate.of(2020, 1, 15), LocalDate.of(2024, 1, 1));
-		System.out.println("Cantidad de registros afectados");
-		System.out.println(cantidad);
-		System.err.println("Delete por Numero");
-		int cantidad2 = this.facturaService.borrarPorNumero("001-7985");
-		System.out.println("Cantidad de registros afectados");
-		System.out.println(cantidad2);
-		System.err.println("Delete Normal");
-		//this.facturaService.borrar(1);
+		Paciente p1 = new Paciente();
+		p1.setCedula("123");
+		p1.setNombre("Juan");
 
+		Paciente p2 = new Paciente();
+		p2.setCedula("456");
+		p2.setNombre("Joel");
 
-		//DTO: Data Transfer Object - Patron de diseño: permite transferir datos entre la capa repo a la capa service 
+		HistoriaClinica h1 = new HistoriaClinica();
+		h1.setAfeccion("dolor rodilla");
+		h1.setMCI(78);
+		h1.setPaciente(p2);
 
-		System.out.println("Objeto DTO");
-		for (FacturaDTO facturaDTO : this.facturaService.buscarFacturasDTO()) {
-			System.out.println(facturaDTO);
-		}
+		List<HistoriaClinica> historias = new ArrayList<>();
+		historias.add(h1);
+		p2.setHistoriaClinicas(historias);
+
+		Biblioteca b1 = new Biblioteca();
+		b1.setCodigo("412l");
+		b1.setNombre("Laco");
+
+		Biblioteca b2 = new Biblioteca();
+		b2.setCodigo("789a");
+		b2.setNombre("Alpa");
+
+		Libro lib = new Libro();
+		lib.setCopias(5);
+		lib.setNombre("Java");
+		lib.setBiblioteca(b1);
+
+		List<Libro> libros = new ArrayList<>();
+		libros.add(lib);
+		b1.setLibros(libros);
+
+		this.bibliotecaService.guardar(b2);
+		this.bibliotecaService.guardar(b1);
+
+		this.iPacienteService.guardar(p2);
+		this.iPacienteService.guardar(p1);
+
+		this.bibliotecaService.buscarBibliotecaFetchJoin();
+		this.bibliotecaService.buscarBibliotecaFullJoin();
+		this.bibliotecaService.buscarBibliotecaInnerJoin();
+		this.bibliotecaService.buscarBibliotecaLeftJoin();
+		this.bibliotecaService.buscarBibliotecaRightJoin();
+
+		this.iPacienteService.buscarPacienteFetchJoin();
+		this.iPacienteService.buscarPacienteFullJoin();
+		this.iPacienteService.buscarPacienteInnerJoin();
+		this.iPacienteService.buscarPacienteLeftJoin();
+		this.iPacienteService.buscarPacienteRightJoin();
+		
 	}
 
 }
