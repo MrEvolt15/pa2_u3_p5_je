@@ -1,28 +1,27 @@
 package com.uce.edu;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import com.uce.edu.ventas.repository.modelo.Biblioteca;
-import com.uce.edu.ventas.repository.modelo.HistoriaClinica;
-import com.uce.edu.ventas.repository.modelo.Libro;
-import com.uce.edu.ventas.repository.modelo.Paciente;
-import com.uce.edu.ventas.service.IBibliotecaService;
-import com.uce.edu.ventas.service.IPacienteService;
+import com.uce.edu.ventas.repository.modelo.Cliente;
+import com.uce.edu.ventas.repository.modelo.Factura;
+import com.uce.edu.ventas.service.IClienteService;
+import com.uce.edu.ventas.service.IFacturaService;
 
 @SpringBootApplication
 
 public class Pa2U3P5JeApplication implements CommandLineRunner{
 
 	@Autowired
-	private IPacienteService iPacienteService;
-	@Autowired
-	private IBibliotecaService bibliotecaService;
+	private IFacturaService facturaService;
+	private IClienteService clienteService;
+	
 	
 
 	public static void main(String[] args) {
@@ -31,58 +30,17 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		Paciente p1 = new Paciente();
-		p1.setCedula("123");
-		p1.setNombre("Juan");
+		System.out.println(TransactionSynchronizationManager.isActualTransactionActive());
+		Factura fac = new Factura();
+		fac.setCedula("456");
+		fac.setFecha(LocalDate.now());
+		fac.setNumero("0007");
 
-		Paciente p2 = new Paciente();
-		p2.setCedula("456");
-		p2.setNombre("Joel");
+		Cliente cli = new Cliente();
+		cli.setApellido(null);
+		cli.setNombre("Joel");
 
-		HistoriaClinica h1 = new HistoriaClinica();
-		h1.setAfeccion("dolor rodilla");
-		h1.setMCI(78);
-		h1.setPaciente(p2);
-
-		List<HistoriaClinica> historias = new ArrayList<>();
-		historias.add(h1);
-		p2.setHistoriaClinicas(historias);
-
-		Biblioteca b1 = new Biblioteca();
-		b1.setCodigo("412l");
-		b1.setNombre("Laco");
-
-		Biblioteca b2 = new Biblioteca();
-		b2.setCodigo("789a");
-		b2.setNombre("Alpa");
-
-		Libro lib = new Libro();
-		lib.setCopias(5);
-		lib.setNombre("Java");
-		lib.setBiblioteca(b1);
-
-		List<Libro> libros = new ArrayList<>();
-		libros.add(lib);
-		b1.setLibros(libros);
-
-		this.bibliotecaService.guardar(b2);
-		this.bibliotecaService.guardar(b1);
-
-		this.iPacienteService.guardar(p2);
-		this.iPacienteService.guardar(p1);
-
-		this.bibliotecaService.buscarBibliotecaFetchJoin();
-		this.bibliotecaService.buscarBibliotecaFullJoin();
-		this.bibliotecaService.buscarBibliotecaInnerJoin();
-		this.bibliotecaService.buscarBibliotecaLeftJoin();
-		this.bibliotecaService.buscarBibliotecaRightJoin();
-
-		this.iPacienteService.buscarPacienteFetchJoin();
-		this.iPacienteService.buscarPacienteFullJoin();
-		this.iPacienteService.buscarPacienteInnerJoin();
-		this.iPacienteService.buscarPacienteLeftJoin();
-		this.iPacienteService.buscarPacienteRightJoin();
-		
+		this.facturaService.guardar(fac,cli);
 	}
 
 }
