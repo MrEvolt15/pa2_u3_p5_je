@@ -30,7 +30,7 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println(TransactionSynchronizationManager.isActualTransactionActive());
+		System.out.println("Main: "+TransactionSynchronizationManager.isActualTransactionActive());
 		Factura fac = new Factura();
 		fac.setCedula("456");
 		fac.setFecha(LocalDate.now());
@@ -40,7 +40,8 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 		cli.setApellido(null);
 		cli.setNombre("Joel");
 
-		this.facturaService.guardar(fac,cli);
+		//this.facturaService.guardar(fac,cli);
+		this.facturaService.prueba();
 	}
 
 }

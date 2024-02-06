@@ -13,6 +13,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 
 @Repository
 @Transactional
@@ -20,10 +21,23 @@ public class FacturaRepositoryImpl implements IFacturaRepository{
 
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
+    @Transactional(value = TxType.MANDATORY)
     public void insertar(Factura factura) {
         this.entityManager.persist(factura);
     }
+    @Transactional(value = TxType.NOT_SUPPORTED)
+    public Factura select(){
+        return null;
+    }
+    /*
+     * insert (si MANDATORY) aseguera que sea llamado desde una transaccion
+     * update (si MANDATORY) aseguera que sea llamado desde una transaccion
+     * delete (si MANDATORY) aseguera que sea llamado desde una transaccion
+     * select (no NOT_SUPPORTED) un select no necesita una transaccion
+     */
+
     @Override
     public Factura seleccionarPorNumero(String numero) {
        TypedQuery<Factura> query = this.entityManager.createQuery("SELECT f FROM Factura f WHERE f.numero = :numero", Factura.class);

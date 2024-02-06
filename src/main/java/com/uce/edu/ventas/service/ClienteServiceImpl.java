@@ -16,15 +16,16 @@ public class ClienteServiceImpl implements IClienteService{
 
 
     @Override
-    @Transactional(value = TxType.REQUIRED)//T2
+    @Transactional(value = TxType.REQUIRES_NEW)//T2
+    //begin
     public void guardar(Cliente cliente) {
         try {
             this.clienteRepository.insertar(cliente);
         } catch (RuntimeException e) {
             // TODO: handle exception
-            System.out.println("error");
+            System.out.println(e.getClass());
         }
         
-    }
+    }//commit
 
 }
