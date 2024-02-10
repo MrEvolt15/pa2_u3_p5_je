@@ -1,5 +1,6 @@
 package com.uce.edu.ventas.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,6 +25,10 @@ public class FacturaServiceImpl implements IFacturaService{
     @Override
     @Transactional(value = TxType.REQUIRED)//T1
     public void guardar(Factura factura,Cliente cliente) {
+        //calculo que no afecta a la bd 
+        BigDecimal decimal = new BigDecimal(100);
+        decimal=decimal.multiply(BigDecimal.valueOf(0.15));
+
         System.out.println(TransactionSynchronizationManager.isActualTransactionActive()); 
         System.out.println("Paso el insert de factura");
         this.facturaRepository.insertar(factura);
@@ -101,5 +106,28 @@ public class FacturaServiceImpl implements IFacturaService{
         System.out.println("Este metodo es de prueba");
         System.out.println("Prueba: "+TransactionSynchronizationManager.isActualTransactionActive());
     }
-
+    @Override
+    @Transactional(value = TxType.NOT_SUPPORTED)
+    public void pruebaSupports() {
+      
+        System.out.println("Prueba Factura: "+TransactionSynchronizationManager.isActualTransactionActive());
+        this.clienteService.pruebaSupports();
+    }
+    public void pruebaSupports1() {
+      
+        System.out.println("Prueba Factura: "+TransactionSynchronizationManager.isActualTransactionActive());
+        this.clienteService.pruebaSupports();
+    }
+    @Transactional(value = TxType.REQUIRED)
+    public void pruebaSupports2() {
+      
+        System.out.println("Prueba Factura: "+TransactionSynchronizationManager.isActualTransactionActive());
+        this.clienteService.pruebaSupports();
+    }
+    @Override
+    //@Transactional(value = TxType.REQUIRES_NEW) //Lanzara una excepcion 
+    public void pruebaNever() {
+        System.out.println("Prueba Factura: "+TransactionSynchronizationManager.isActualTransactionActive());
+        this.clienteService.pruebaNever();
+    }
 }

@@ -1,5 +1,6 @@
 package com.uce.edu.ventas.repository.modelo;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "factura")
@@ -28,6 +30,9 @@ public class Factura {
     private LocalDate fecha;
     @Column(name = "fact_cedula")
     private String cedula;
+    @Transient   //para atributos que no quiero guardarlos en la bd, atributos momentaneos
+    private BigDecimal valorIVA;
+
     @OneToMany(mappedBy = "factura",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<DetalleFactura> detalleFacturas;
 
@@ -41,6 +46,12 @@ public class Factura {
     }
     public void setId(Integer id) {
         this.id = id;
+    }
+    public BigDecimal getValorIVA() {
+        return valorIVA;
+    }
+    public void setValorIVA(BigDecimal valorIVA) {
+        this.valorIVA = valorIVA;
     }
     public String getNumero() {
         return numero;
