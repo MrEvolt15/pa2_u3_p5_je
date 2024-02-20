@@ -1,5 +1,7 @@
 package com.uce.edu.ventas.service;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -17,14 +19,19 @@ public class ClienteServiceImpl implements IClienteService{
 
 
     @Override
-    @Transactional(value = TxType.REQUIRES_NEW)//T2
+    //@Transactional(value = TxType.REQUIRES_NEW)//T2
     //begin
     public void guardar(Cliente cliente) {
         try {
             this.clienteRepository.insertar(cliente);
+            //simulando demora por diferentes consultas
+            TimeUnit.MILLISECONDS.sleep(50);
         } catch (RuntimeException e) {
             // TODO: handle exception
             System.out.println(e.getClass());
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         
     }//commit

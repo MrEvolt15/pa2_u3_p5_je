@@ -1,25 +1,22 @@
 package com.uce.edu;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.uce.edu.ventas.repository.modelo.Cliente;
-import com.uce.edu.ventas.repository.modelo.Factura;
 import com.uce.edu.ventas.service.IClienteService;
-import com.uce.edu.ventas.service.IFacturaService;
 
 @SpringBootApplication
 
 public class Pa2U3P5JeApplication implements CommandLineRunner{
 
 	@Autowired
-	private IFacturaService facturaService;
+	//private IFacturaService facturaService;
 	private IClienteService clienteService;
 	
 	
@@ -30,10 +27,31 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("Main: "+TransactionSynchronizationManager.isActualTransactionActive());
-		
-		//this.facturaService.pruebaSupports();
-		//this.facturaService.pruebaNever();
+		/*
+		System.out.println("Nombre hilo: "+Thread.currentThread().getName());
+		long tiempoInicial = System.currentTimeMillis();
+		for(int i=1;i<=100;i++){
+			Cliente cli = new Cliente();
+			cli.setNombre("CN"+i);
+			cli.setApellido("CA"+i);
+			this.clienteService.guardar(cli);
+		}
+		long tiempoFinal = System.currentTimeMillis();
+		System.out.println("Tiempo total: "+(tiempoFinal-tiempoInicial)/1000);
+		*/
+		//Programacion en Paralelo
+		System.out.println("Nombre hilo: "+Thread.currentThread().getName());
+		long tiempoInicial = System.currentTimeMillis();
+		List<Cliente> listaCli = new ArrayList<>();
+		for(int i=1;i<=100;i++){
+			Cliente cli = new Cliente();
+			cli.setNombre("CN"+i);
+			cli.setApellido("CA"+i);
+			listaCli.add(cli);
+		}
+		listaCli.parallelStream().forEach(cliente -> this.clienteService.guardar(cliente));
+		long tiempoFinal = System.currentTimeMillis();
+		System.out.println("Tiempo total: "+(tiempoFinal-tiempoInicial)/1000);
 	}
 
 }
