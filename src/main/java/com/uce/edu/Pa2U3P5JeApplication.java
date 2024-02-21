@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.uce.edu.ventas.repository.modelo.Cliente;
 import com.uce.edu.ventas.service.IClienteService;
 
 @SpringBootApplication
-
+@EnableAsync
 public class Pa2U3P5JeApplication implements CommandLineRunner{
 
 	@Autowired
@@ -27,7 +28,8 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		/*
+		/* 
+		//Programacion Sincrona 1 hilo
 		System.out.println("Nombre hilo: "+Thread.currentThread().getName());
 		long tiempoInicial = System.currentTimeMillis();
 		for(int i=1;i<=100;i++){
@@ -37,9 +39,10 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 			this.clienteService.guardar(cli);
 		}
 		long tiempoFinal = System.currentTimeMillis();
-		System.out.println("Tiempo total: "+(tiempoFinal-tiempoInicial)/1000);
+		System.out.println("Tiempo total: "+(tiempoFinal-tiempoInicial));
 		*/
 		//Programacion en Paralelo
+		/* 
 		System.out.println("Nombre hilo: "+Thread.currentThread().getName());
 		long tiempoInicial = System.currentTimeMillis();
 		List<Cliente> listaCli = new ArrayList<>();
@@ -51,7 +54,20 @@ public class Pa2U3P5JeApplication implements CommandLineRunner{
 		}
 		listaCli.parallelStream().forEach(cliente -> this.clienteService.guardar(cliente));
 		long tiempoFinal = System.currentTimeMillis();
-		System.out.println("Tiempo total: "+(tiempoFinal-tiempoInicial)/1000);
+		System.out.println("Tiempo total: "+(tiempoFinal-tiempoInicial));
+		*/
+		//Programacion Asincrona
+		System.out.println("Nombre hilo: "+Thread.currentThread().getName());
+		long tiempoInicial = System.currentTimeMillis();
+		for(int i=1;i<=100;i++){
+			Cliente cli = new Cliente();
+			cli.setNombre("CN"+i);
+			cli.setApellido("CA"+i);
+			this.clienteService.guardar(cli);
+		}
+		long tiempoFinal = System.currentTimeMillis();
+		System.out.println("Tiempo total: "+(tiempoFinal-tiempoInicial));
+		System.out.println("Se ha mandado a procesar sus 500 estudiantes");
 	}
 
 }

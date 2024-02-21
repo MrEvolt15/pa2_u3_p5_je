@@ -3,6 +3,7 @@ package com.uce.edu.ventas.service;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -19,9 +20,11 @@ public class ClienteServiceImpl implements IClienteService{
 
 
     @Override
-    //@Transactional(value = TxType.REQUIRES_NEW)//T2
+    @Transactional(value = TxType.REQUIRES_NEW)//T2
+    @Async
     //begin
     public void guardar(Cliente cliente) {
+        System.out.println("Nombre hilo: "+Thread.currentThread().getName());
         try {
             this.clienteRepository.insertar(cliente);
             //simulando demora por diferentes consultas
